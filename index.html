@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DATAFARM — Distribution-Aligned TAMP for Fine-Tuning VLAs</title>
+  <meta name="description" content="DATAFARM aligns task-and-motion-planning demonstrations with a VLA's pretraining distribution, making TAMP an effective source of fine-tuning data." />
+  <meta property="og:title" content="DATAFARM: Distribution-Aligned Task and Motion Planning for Fine-Tuning Vision-Language-Action Models" />
+  <meta property="og:description" content="Aligning planner-generated demonstrations with the pretraining distribution raises VLA fine-tuning success from 8.3% (raw TAMP) to 56.7%, approaching human teleoperation (61.7%)." />
+  <meta property="og:image" content="static/images/teaser.jpg" />
+  <meta property="og:type" content="website" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/css/style.css" />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="#">DATA<span>FARM</span></a>
+    <a class="link" href="#abstract">Abstract</a>
+    <a class="link" href="#method">Method</a>
+    <a class="link" href="#results">Results</a>
+    <a class="link" href="#alignment">Alignment</a>
+    <a class="link" href="#bibtex">BibTeX</a>
+  </div>
+</nav>
+
+<!-- ===================== LEFT TABLE OF CONTENTS (wide screens) ===================== -->
+<nav class="toc" aria-label="On this page">
+  <div class="toc-hd">Contents</div>
+  <ul class="toc-list">
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#method">Method</a></li>
+    <li><a href="#tasks">Tasks</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#ablations">Ablations</a></li>
+    <li><a href="#retention">Capability Retention</a></li>
+    <li><a href="#budget">Demonstration Budget</a></li>
+    <li><a href="#alignment">Distribution Alignment</a></li>
+    <li><a href="#bibtex">BibTeX</a></li>
+  </ul>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="wrap">
+    <h1 class="title"><span class="name">DATAFARM</span>: Distribution-Aligned Task and Motion Planning<br />for Fine-Tuning Vision-Language-Action Models</h1>
+
+    <div class="authors">Anonymous Authors</div>
+    <div class="affil">Paper under review</div>
+
+    <div class="buttons">
+      <a class="btn soon" aria-disabled="true">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V8h4.5L14 3.5z"/></svg>
+        Paper &middot; coming soon
+      </a>
+      <a class="btn ghost soon" aria-disabled="true">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.9 10.9c.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.3.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+        Code &middot; coming soon
+      </a>
+    </div>
+
+    <figure class="fig teaser">
+      <img src="static/images/teaser.jpg" width="1800" height="782" alt="Given a pretrained VLA and a new task, TAMP is cheap but off-distribution, teleoperation is on-distribution but expensive, and distribution-aligned TAMP (DATAFARM) is cheap and on-distribution. End-effector speed profiles show DATAFARM resembling teleoperation." />
+      <figcaption>Task and motion planning is a scalable source of robot demonstrations, but its trajectories are behaviorally mismatched with the VLA pretraining distribution, so fine-tuning on them works poorly. Teleoperation is on-distribution but costs human time. <b>DATAFARM</b> aligns TAMP trajectories with the pretraining distribution, producing demonstrations that are both cheap and on-distribution.</figcaption>
+    </figure>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="num">56.7<small>%</small></div>
+        <div class="lbl"><b>DATAFARM</b> average success<br />vs. 8.3% for raw TAMP</div>
+      </div>
+      <div class="stat">
+        <div class="num">61.7<small>%</small></div>
+        <div class="lbl"><b>Human teleoperation</b> average success,<br />the oracle data source</div>
+      </div>
+      <div class="stat">
+        <div class="num">85<small>%</small></div>
+        <div class="lbl"><b>Cloth folding retained</b> after fine-tuning<br />(90% before), with no folding demos</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== ABSTRACT ===================== -->
+<section id="abstract" class="alt">
+  <div class="wrap">
+    <h2 class="sec">Abstract</h2>
+    <div class="prose">
+      <p>Collecting high-quality robot data remains a fundamental challenge for training robot foundation models. Task and motion planning (TAMP) offers a scalable way to generate demonstrations, but our experiments show that raw TAMP trajectories provide surprisingly little benefit when used to fine-tune pretrained vision-language-action (VLA) models, despite successfully solving the target tasks. We hypothesize that this failure arises from a <b>behavioral distribution mismatch</b> between planner-generated trajectories and the data used to pretrain the VLA.</p>
+      <p>To address this mismatch, we introduce <b>DATAFARM</b>: <b>D</b>istribution-<b>A</b>ligned <b>T</b>ask <b>A</b>nd motion planning for <b>F</b>ine-tuning <b>A</b> <b>R</b>obot foundation <b>M</b>odel, an approach that incorporates the pretraining distribution directly into TAMP trajectory generation. DATAFARM aligns generated trajectories with the pretraining data in <b>robot joint configurations</b>, <b>motion style</b>, and <b>temporal execution profiles</b>. We evaluate DATAFARM on three tabletop manipulation tasks that TAMP can perform and a cloth-folding task beyond the capability of TAMP. DATAFARM achieves an average success rate of <b>56.7%</b>, substantially outperforming raw TAMP (8.3%) while approaching human teleoperation (61.7%). On Deformable Object Manipulation, which is outside the fine-tuning distribution, the fine-tuned model retains 85% success, compared with 90% for the pretrained model. These results show that aligning planner-generated demonstrations with the pretraining distribution can make TAMP an effective source of data for VLA fine-tuning.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== METHOD ===================== -->
+<section id="method">
+  <div class="wrap">
+    <h2 class="sec">Method</h2>
+    <p class="sec-sub">DATAFARM learns what "on-distribution" robot behavior looks like from the VLA's pretraining data (DROID), then uses that as an objective inside the planner. The planner still enforces every task and motion constraint.</p>
+
+    <figure class="fig reveal">
+      <img src="static/images/overview.jpg" width="1800" height="415" loading="lazy" alt="DATAFARM overview: a Gaussian mixture over joint configurations and a trajectory encoder with a latent Gaussian are fit to pretraining data; these provide costs for TAMP endpoint selection, path optimization, and retiming; executed trajectories form a dataset used to fine-tune the VLA with flow matching." />
+      <figcaption><b>Overview.</b> From pretraining demonstrations <span class="eq">D<sub>ref</sub></span>, DATAFARM fits a Gaussian mixture density <span class="eq">p<sub>conf</sub>(q)</span> over joint configurations and trains a trajectory encoder <span class="eq">E<sub>&phi;</sub></span> with a latent reference density <span class="eq">p<sub>latent</sub>(z)</span>. These frozen models supply alignment costs for TAMP endpoint selection, path optimization, and retiming. The resulting trajectories are executed on the robot to collect a dataset <span class="eq">D</span>, which fine-tunes the pretrained VLA &pi;<sub>0.5</sub>-DROID.</figcaption>
+    </figure>
+
+    <div class="pillars">
+      <div class="pillar reveal">
+        <div class="step">1 &middot; Joint space</div>
+        <h4>Endpoint Selection</h4>
+        <div class="what">cost <code>c<sub>conf</sub>(q) = &minus;log p<sub>conf</sub>(q)</code></div>
+        <p>Inverse kinematics admits many arm postures for the same gripper pose. DATAFARM ranks the IK candidates, including the symmetric rotated grasp, under a 16-component Gaussian mixture fit to about 988K moving DROID frames. It keeps the posture a human teleoperator would most likely have used.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="step">2 &middot; Motion style</div>
+        <h4>Path Optimization</h4>
+        <div class="what">cost <code>C<sub>plan</sub>(&xi;) + &lambda;<sub>path</sub> c<sub>traj</sub>(&xi;)</code></div>
+        <p>A self-supervised trajectory encoder maps positions, velocities, accelerations, and jerks to a 16-D latent. The squared Mahalanobis distance from the DROID latent density is added to cuRobo's trajectory optimization, and its gradients pass back through the frozen encoder to the waypoints.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="step">3 &middot; Timing</div>
+        <h4>Retiming</h4>
+        <div class="what">cost <code>c<sub>traj</sub>(&xi;<sub>&theta;,&tau;</sub>) + &lambda;<sub>b</sub> c<sub>boundary</sub></code></div>
+        <p>With the path geometry fixed, DATAFARM optimizes the speed profile over 64 arc-length intervals and the total duration. A boundary penalty slows the arm near grasps and releases, as human operators do. Candidates that exceed robot limits are rejected.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TASKS ===================== -->
+<section id="tasks" class="alt">
+  <div class="wrap">
+    <h2 class="sec">Tasks</h2>
+    <p class="sec-sub">A DROID platform (Franka Panda + Robotiq gripper). For each target task, we fine-tune &pi;<sub>0.5</sub>-DROID on 20 successful demonstrations and evaluate it on 20 fresh trials.</p>
+
+    <div class="two-col">
+      <figure class="fig reveal">
+        <img src="static/images/tasks.jpg" width="1040" height="725" loading="lazy" alt="Initial and final scenes for Geometric Constraints, Multi-Step Reasoning, Semantic Reasoning, and Deformable Object Manipulation." />
+      </figure>
+      <ul class="task-list">
+        <li><b>Geometric Constraints <span class="tag target">target</span></b>Place three toys on a plate without collisions. Placing an early toy in the center can block the later ones.</li>
+        <li><b>Multi-Step Reasoning <span class="tag target">target</span></b>Remove a banana obstructing a tray, then pack two toys onto the tray.</li>
+        <li><b>Semantic Reasoning <span class="tag target">target</span></b>Sort three objects into two bowls by semantic category (fruit vs. toys).</li>
+        <li class="ood"><b>Deformable Object Manipulation <span class="tag ood">out-of-distribution</span></b>Fold a cloth. The planner cannot do this and the fine-tuning data never include it. It tests whether the pretrained capability survives fine-tuning.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RESULTS ===================== -->
+<section id="results">
+  <div class="wrap">
+    <h2 class="sec">Results</h2>
+    <p class="sec-sub">A task-valid trajectory is not necessarily good fine-tuning data. Every raw TAMP demonstration solves its task, yet fine-tuning on them barely helps. Aligning the planner with the pretraining distribution closes most of the gap to human teleoperation.</p>
+
+    <div class="chart-card reveal">
+      <div class="chart-head">
+        <div class="chart-title">Target-task performance by demonstration source</div>
+        <div class="seg" role="group" aria-label="Metric" data-for="main">
+          <button class="active" data-metric="succ">Success</button>
+          <button data-metric="prog">Task progress</button>
+        </div>
+      </div>
+      <div class="legend" id="legend-main"></div>
+      <div class="chart" id="chart-main"></div>
+      <details class="table-toggle">
+        <summary>Show full results table</summary>
+        <div class="table-wrap">
+          <table class="res">
+            <thead>
+              <tr><th rowspan="2">Approach</th><th colspan="4" class="grp">Geometric Constraints</th><th colspan="4" class="grp">Multi-Step Reasoning</th><th colspan="4" class="grp">Semantic Reasoning</th></tr>
+              <tr><th class="grp">Succ.</th><th>Prog.</th><th>OOD Succ.</th><th>OOD Prog.</th><th class="grp">Succ.</th><th>Prog.</th><th>OOD Succ.</th><th>OOD Prog.</th><th class="grp">Succ.</th><th>Prog.</th><th>OOD Succ.</th><th>OOD Prog.</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>&pi;<sub>0.5</sub>-DROID</td><td class="grp">0%</td><td>18%</td><td>90%</td><td>95%</td><td class="grp">0%</td><td>13%</td><td>90%</td><td>95%</td><td class="grp">5%</td><td>50%</td><td>90%</td><td>95%</td></tr>
+              <tr><td>Raw TAMP</td><td class="grp">5%</td><td>35%</td><td>85%</td><td>93%</td><td class="grp">5%</td><td>37%</td><td>70%</td><td>85%</td><td class="grp">15%</td><td>58%</td><td>75%</td><td>88%</td></tr>
+              <tr class="abl"><td>DATAFARM w/o style</td><td class="grp">10%</td><td>39%</td><td>–</td><td>–</td><td class="grp">0%</td><td>31%</td><td>–</td><td>–</td><td class="grp">35%</td><td>54%</td><td>–</td><td>–</td></tr>
+              <tr class="abl"><td>DATAFARM w/o timing</td><td class="grp">0%</td><td>19%</td><td>–</td><td>–</td><td class="grp">0%</td><td>18%</td><td>–</td><td>–</td><td class="grp">0%</td><td>29%</td><td>–</td><td>–</td></tr>
+              <tr class="abl"><td>DATAFARM w/o joint space</td><td class="grp">35%</td><td>73%</td><td>–</td><td>–</td><td class="grp">15%</td><td>53%</td><td>–</td><td>–</td><td class="grp">20%</td><td>66%</td><td>–</td><td>–</td></tr>
+              <tr class="ours"><td>DATAFARM</td><td class="grp">65%</td><td>84%</td><td>80%</td><td>90%</td><td class="grp">35%</td><td>81%</td><td>85%</td><td>88%</td><td class="grp">70%</td><td>89%</td><td>90%</td><td>93%</td></tr>
+              <tr class="oracle"><td>Human teleop (oracle)</td><td class="grp">50%</td><td>93%</td><td>95%</td><td>98%</td><td class="grp">45%</td><td>90%</td><td>95%</td><td>98%</td><td class="grp">90%</td><td>98%</td><td>95%</td><td>98%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caption">Success rate and task progress (fraction of 7 binary subgoals completed) over 20 trials per checkpoint. OOD columns evaluate each task-specific checkpoint on Deformable Object Manipulation. Human teleoperation is an oracle only in its access to human target-task demonstrations; it is not assumed to upper-bound autonomous methods.</p>
+      </details>
+    </div>
+
+    <div class="findings">
+      <div class="finding"><b>Raw TAMP barely helps.</b> Fine-tuning on successful TiPToP executions raises average success from 1.7% to only 8.3%.</div>
+      <div class="finding"><b>DATAFARM improves every task</b>: 65% / 35% / 70% success vs. 5% / 5% / 15% for raw TAMP, and 84.7% average progress.</div>
+      <div class="finding"><b>Beats teleop on Geometric Constraints</b> (65% vs. 50%) and trails it on Multi-Step (35% vs. 45%) and Semantic Reasoning (70% vs. 90%).</div>
+      <div class="finding"><b>No human in the control loop.</b> DATAFARM plans and executes every demonstration autonomously. Humans only set up and reset scenes.</div>
+    </div>
+
+    <!-- ---------- ablations ---------- -->
+    <h3 class="sub" id="ablations">Every alignment component matters</h3>
+    <p class="sec-sub">Each ablation removes one component and keeps the other two. Removing timing alignment is catastrophic: the policy fails every trial on all three tasks.</p>
+    <div class="chart-card reveal">
+      <div class="chart-head">
+        <div class="chart-title">Ablations</div>
+        <div class="seg" role="group" aria-label="Metric" data-for="abl">
+          <button class="active" data-metric="succ">Success</button>
+          <button data-metric="prog">Task progress</button>
+        </div>
+      </div>
+      <div class="legend" id="legend-abl"></div>
+      <div class="chart" id="chart-abl"></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- ---------- retention ---------- -->
+      <div id="retention" class="chart-card reveal">
+        <div class="chart-head">
+          <div class="chart-title">Cloth folding after fine-tuning (OOD)</div>
+        </div>
+        <div class="legend" id="legend-ret"></div>
+        <div class="chart" id="chart-ret"></div>
+        <p class="chart-note">Success on Deformable Object Manipulation after fine-tuning on each target task. The dashed line marks the pretrained model (90%). DATAFARM keeps 85% on average, while raw TAMP falls to 76.7%.</p>
+      </div>
+
+      <!-- ---------- budget ---------- -->
+      <div id="budget" class="chart-card reveal">
+        <div class="chart-head">
+          <div class="chart-title">Scaling the demonstration budget</div>
+        </div>
+        <div class="legend" id="legend-budget"></div>
+        <div class="chart" id="chart-budget"></div>
+        <p class="chart-note">Geometric Constraints, fine-tuned on 0–80 DATAFARM demonstrations. Zero demonstrations is the pretrained &pi;<sub>0.5</sub>-DROID. With 80 demonstrations, success reaches 85% and progress 97%.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ALIGNMENT ===================== -->
+<section id="alignment" class="alt">
+  <div class="wrap">
+    <h2 class="sec">Distribution Alignment</h2>
+    <p class="sec-sub">Projecting samples onto the first two principal components shows DATAFARM demonstrations moving inside the DROID distribution, both in joint space and in the learned trajectory latent space.</p>
+
+    <div class="two-col">
+      <figure class="fig narrow reveal">
+        <img src="static/images/alignment.jpg" width="1045" height="1300" loading="lazy" alt="PCA density contours. Joint space: 74% of DATAFARM samples inside the DROID contour vs. 66% raw TAMP and 60% without joint-space alignment. Latent space: 96% DATAFARM vs. 0% raw TAMP, 89% without style, 19% without timing." />
+      </figure>
+      <div class="prose">
+        <p><b>Joint space.</b> 74% of DATAFARM configurations lie inside the displayed DROID contour, compared with 66% for raw TAMP and 60% without joint-space alignment.</p>
+        <p><b>Trajectory latent space.</b> 96% of DATAFARM trajectory embeddings lie inside the DROID contour. Raw TAMP trajectories land in an entirely separate region (0%), and removing timing alignment drops overlap to 19%.</p>
+        <p><b>Overlap is not the whole story.</b> The style ablation keeps 89% latent overlap but reaches only 15% success. High overlap in one projection alone does not guarantee task success, and each component helps when added to the other two.</p>
+        <p class="caption">Each annotation reports the fraction of a source's projected samples inside the outer DROID contour. These projections diagnose overlap in the displayed representations; they do not measure equality with the full pretraining distribution.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BIBTEX ===================== -->
+<section id="bibtex">
+  <div class="wrap">
+    <h2 class="sec">BibTeX</h2>
+    <div class="bib">
+      <button class="copy" type="button">Copy</button>
+<pre><code>@article{datafarm2026,
+  title   = {DATAFARM: Distribution-Aligned Task and Motion Planning
+             for Fine-Tuning Vision-Language-Action Models},
+  author  = {Anonymous Authors},
+  year    = {2026},
+  note    = {Under review}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="#">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>
