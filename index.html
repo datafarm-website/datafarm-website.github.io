@@ -38,7 +38,9 @@
     <li><a href="#abstract">Abstract</a></li>
     <li><a href="#method">Method</a></li>
     <li><a href="#tasks">Tasks</a></li>
+    <li><a href="#demos">Demonstrations</a></li>
     <li><a href="#results">Results</a></li>
+    <li><a href="#rollouts">Policy Rollouts</a></li>
     <li><a href="#ablations">Ablations</a></li>
     <li><a href="#retention">Capability Retention</a></li>
     <li><a href="#budget">Demonstration Budget</a></li>
@@ -130,6 +132,18 @@
         <p>With the path geometry fixed, DATAFARM optimizes the speed profile over 64 arc-length intervals and the total duration. A boundary penalty slows the arm near grasps and releases, as human operators do. Candidates that exceed robot limits are rejected.</p>
       </div>
     </div>
+
+    <div class="vid-card reveal" style="margin-top: 22px;">
+      <figure class="vid">
+        <div class="vid-hd">2 &middot; Path optimization</div>
+        <video class="wide" data-autoplay muted loop playsinline preload="none" width="1496" height="472" poster="static/videos/anim-path-optimization.jpg"><source src="static/videos/anim-path-optimization.mp4" type="video/mp4" /></video>
+      </figure>
+      <figure class="vid" style="margin-top: 18px;">
+        <div class="vid-hd">3 &middot; Retiming</div>
+        <video class="wide" data-autoplay muted loop playsinline preload="none" width="1496" height="472" poster="static/videos/anim-retiming.jpg"><source src="static/videos/anim-retiming.mp4" type="video/mp4" /></video>
+      </figure>
+      <p class="chart-note">The frozen trajectory encoder embeds each candidate trajectory. Path optimization reshapes the waypoints, and retiming changes the progress-along-path profile, until the embedding moves into the pretraining density.</p>
+    </div>
   </div>
 </section>
 
@@ -149,6 +163,29 @@
         <li><b>Semantic Reasoning <span class="tag target">target</span></b>Sort three objects into two bowls by semantic category (fruit vs. toys).</li>
         <li class="ood"><b>Deformable Object Manipulation <span class="tag ood">out-of-distribution</span></b>Fold a cloth. The planner cannot do this and the fine-tuning data never include it. It tests whether the pretrained capability survives fine-tuning.</li>
       </ul>
+    </div>
+
+    <!-- ---------- demonstrations ---------- -->
+    <h3 class="sub" id="demos">Raw TAMP vs. DATAFARM demonstrations</h3>
+    <p class="sec-sub">Both planners solve every task. What differs is how the arm moves: DATAFARM chooses arm postures, motion style, and timing that resemble the teleoperated data the VLA was pretrained on.</p>
+    <div class="vid-card reveal">
+      <div class="vid-row">
+        <div class="vid-label"><i style="background: var(--s-raw)"></i>Raw TAMP</div>
+        <div class="vid-grid cols-3">
+          <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/demo-raw-geometric.jpg"><source src="static/videos/demo-raw-geometric.mp4" type="video/mp4" /></video><figcaption>Geometric Constraints</figcaption></figure>
+          <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/demo-raw-multistep.jpg"><source src="static/videos/demo-raw-multistep.mp4" type="video/mp4" /></video><figcaption>Multi-Step Reasoning</figcaption></figure>
+          <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/demo-raw-semantic.jpg"><source src="static/videos/demo-raw-semantic.mp4" type="video/mp4" /></video><figcaption>Semantic Reasoning</figcaption></figure>
+        </div>
+      </div>
+      <div class="vid-row">
+        <div class="vid-label"><i style="background: var(--s-ours)"></i>DATAFARM</div>
+        <div class="vid-grid cols-3">
+          <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/demo-datafarm-geometric.jpg"><source src="static/videos/demo-datafarm-geometric.mp4" type="video/mp4" /></video><figcaption>Geometric Constraints</figcaption></figure>
+          <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/demo-datafarm-multistep.jpg"><source src="static/videos/demo-datafarm-multistep.mp4" type="video/mp4" /></video><figcaption>Multi-Step Reasoning</figcaption></figure>
+          <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/demo-datafarm-semantic.jpg"><source src="static/videos/demo-datafarm-semantic.mp4" type="video/mp4" /></video><figcaption>Semantic Reasoning</figcaption></figure>
+        </div>
+      </div>
+      <p class="chart-note">Autonomous executions used as fine-tuning data. Videos are sped up by the factor shown in each corner.</p>
     </div>
   </div>
 </section>
@@ -197,6 +234,26 @@
       <div class="finding"><b>DATAFARM improves every task</b>: 65% / 35% / 70% success vs. 5% / 5% / 15% for raw TAMP, and 84.7% average progress.</div>
       <div class="finding"><b>Beats teleop on Geometric Constraints</b> (65% vs. 50%) and trails it on Multi-Step (35% vs. 45%) and Semantic Reasoning (70% vs. 90%).</div>
       <div class="finding"><b>No human in the control loop.</b> DATAFARM plans and executes every demonstration autonomously. Humans only set up and reset scenes.</div>
+    </div>
+
+    <!-- ---------- rollouts ---------- -->
+    <h3 class="sub" id="rollouts">Policy rollouts after fine-tuning on DATAFARM</h3>
+    <p class="sec-sub">&pi;<sub>0.5</sub>-DROID fine-tuned on DATAFARM demonstrations, running closed-loop on the robot.</p>
+    <div class="vid-card reveal">
+      <div class="vid-hd">Target tasks</div>
+      <div class="vid-grid cols-3">
+        <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/rollout-geometric.jpg"><source src="static/videos/rollout-geometric.mp4" type="video/mp4" /></video><figcaption>Geometric Constraints</figcaption></figure>
+        <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/rollout-multistep.jpg"><source src="static/videos/rollout-multistep.mp4" type="video/mp4" /></video><figcaption>Multi-Step Reasoning</figcaption></figure>
+        <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/rollout-semantic.jpg"><source src="static/videos/rollout-semantic.mp4" type="video/mp4" /></video><figcaption>Semantic Reasoning</figcaption></figure>
+      </div>
+    </div>
+    <div class="vid-card reveal">
+      <div class="vid-hd">Deformable Object Manipulation <span class="tag ood">out-of-distribution</span></div>
+      <div class="vid-grid cols-2">
+        <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/base-cloth.jpg"><source src="static/videos/base-cloth.mp4" type="video/mp4" /></video><figcaption>Before fine-tuning (&pi;<sub>0.5</sub>-DROID)</figcaption></figure>
+        <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/rollout-cloth.jpg"><source src="static/videos/rollout-cloth.mp4" type="video/mp4" /></video><figcaption>After fine-tuning on DATAFARM</figcaption></figure>
+      </div>
+      <p class="chart-note">The fine-tuning data contain no folding demonstrations, yet the fine-tuned policy still folds the cloth. Videos are sped up by the factor shown in each corner.</p>
     </div>
 
     <!-- ---------- ablations ---------- -->

@@ -162,8 +162,25 @@ figure { margin: 0; }
 .tag.target { background: var(--accent-soft); color: var(--accent-ink); }
 .tag.ood { background: #fbe6d6; color: #9a4a1c; }
 
+/* ---------- videos ---------- */
+.vid-card + .vid-card { margin-top: 18px; }
+.vid-hd { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.vid-hd .tag { letter-spacing: .06em; }
+.vid-grid { display: grid; gap: 14px; }
+.vid-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.vid-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 560px) { .vid-grid.cols-2, .vid-grid.cols-3 { grid-template-columns: 1fr; } }
+.vid video { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; border-radius: 9px; background: var(--bg-alt); }
+.vid video.wide { aspect-ratio: 1496 / 472; background: #fff; }
+.vid figcaption { font-size: 13px; font-weight: 600; color: var(--ink-2); text-align: center; margin-top: 7px; line-height: 1.35; }
+.vid-row { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; }
+.vid-row + .vid-row { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.vid-label { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-2); }
+.vid-label i { display: block; width: 22px; height: 4px; border-radius: 2px; margin-bottom: 6px; }
+@media (max-width: 760px) { .vid-row { grid-template-columns: 1fr; gap: 8px; } }
+
 /* ---------- charts ---------- */
-.chart-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px 18px; }
+.chart-card, .vid-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px 18px; }
 .chart-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .chart-title { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
 .seg { display: inline-flex; background: var(--bg-alt); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }

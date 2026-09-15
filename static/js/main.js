@@ -284,6 +284,26 @@
     rt = setTimeout(function () { charts.forEach(function (c) { c.draw(); }); }, 120);
   });
 
+  // ---------- videos: play only while near the viewport ----------
+  var vids = document.querySelectorAll('video[data-autoplay]');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    vids.forEach(function (vd) { vd.controls = true; vd.preload = 'metadata'; });
+  } else {
+    var vio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var vd = e.target;
+        if (e.isIntersecting) {
+          var p = vd.play();
+          if (p && p.catch) p.catch(function () { vd.controls = true; });
+        } else {
+          vd.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+    vids.forEach(function (vd) { vio.observe(vd); });
+  }
+
   // ---------- reveal on scroll ----------
   var reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
