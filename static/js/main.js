@@ -1,4 +1,4 @@
-/* DATAFARM project page: charts, scroll-spy, reveal, copy. No dependencies. */
+/* DATAFARM project page: charts, scroll-spy, copy. No dependencies. */
 (function () {
   'use strict';
 
@@ -26,9 +26,9 @@
   };
 
   var ABL_SERIES = {
-    style: { label: 'w/o style',       color: '#e87ba4' },
-    timing:{ label: 'w/o timing',      color: '#eda100' },
-    joint: { label: 'w/o joint space', color: '#008300' },
+    style: { label: 'w/o style',       color: '#a2748f' },
+    timing:{ label: 'w/o timing',      color: '#b58b2a' },
+    joint: { label: 'w/o joint space', color: '#7e9b6f' },
     ours:  { label: 'DATAFARM (full)', color: SERIES.ours.color }
   };
   var ABL = {
@@ -72,12 +72,10 @@
     };
   }
 
-  // Vertical bar path with 4px rounded data-end, square at the baseline.
+  // Plain rectangle, flush to the baseline.
   function barPath(x, y, w, h) {
     if (h <= 0) return '';
-    var r = Math.min(4, w / 2, h);
-    return 'M' + x + ',' + (y + h) + 'V' + (y + r) + 'Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
-      'H' + (x + w - r) + 'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) + 'V' + (y + h) + 'Z';
+    return 'M' + x + ',' + (y + h) + 'V' + y + 'H' + (x + w) + 'V' + (y + h) + 'Z';
   }
 
   // ---------- grouped bar chart ----------
@@ -167,7 +165,7 @@
     var svg = null;
     var lines = [
       { key: 'succ', label: 'Success rate', color: SERIES.ours.color, dash: null },
-      { key: 'prog', label: 'Task progress', color: '#1c5cab', dash: '6 4' }
+      { key: 'prog', label: 'Task progress', color: '#6f7a85', dash: '6 4' }
     ];
     legend('legend-budget', ['succ', 'prog'], { succ: lines[0], prog: lines[1] });
     // make the legend swatch for progress read as dashed
@@ -241,7 +239,7 @@
   charts.push(groupedBars(document.getElementById('chart-main'), {
     cats: TASKS, shortCats: ['Geometric', 'Multi-Step', 'Semantic', 'Average'],
     keys: mainKeys, series: SERIES, labelKeys: ['ours'], avgDivider: true,
-    aria: 'Target-task performance by demonstration source',
+    aria: 'Success rate and task progress for task-specific fine-tuning',
     data: function () { return MAIN[state.main]; }
   }));
 
@@ -261,7 +259,7 @@
   charts.push(groupedBars(document.getElementById('chart-ret'), {
     cats: RET_CATS, keys: retKeys, series: SERIES, avgDivider: true, height: 280,
     refLine: 90,
-    aria: 'Cloth folding success after fine-tuning on each target task',
+    aria: 'Retention of pretrained capabilities on Deformable Object Manipulation',
     data: function () { return RET; }
   }));
 
@@ -302,17 +300,6 @@
       });
     }, { rootMargin: '200px 0px' });
     vids.forEach(function (vd) { vio.observe(vd); });
-  }
-
-  // ---------- reveal on scroll ----------
-  var reveals = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    reveals.forEach(function (r) { io.observe(r); });
-  } else {
-    reveals.forEach(function (r) { r.classList.add('in'); });
   }
 
   // ---------- TOC scroll-spy ----------
