@@ -73,7 +73,7 @@
 
     <figure class="fig teaser">
       <img src="static/images/teaser.jpg" width="1756" height="744" alt="Given a pretrained VLA and a new task, TAMP is cheap but off-distribution, teleoperation is on-distribution but expensive, and distribution-aligned TAMP (DATAFARM) is cheap and on-distribution. End-effector speed profiles show DATAFARM resembling teleoperation." />
-      <figcaption>Task and motion planning provides a scalable source of robot demonstrations but generates trajectories that are behaviorally mismatched with the VLA pretraining distribution, resulting in poor fine-tuning performance. Human teleoperation provides on-distribution demonstrations but requires substantial human effort. <b>DATAFARM</b> bridges these two approaches by aligning TAMP-generated trajectories with the pretraining distribution, enabling scalable generation of on-distribution demonstrations for VLA fine-tuning.</figcaption>
+      <figcaption>TAMP data is scalable but mismatched with the VLA&rsquo;s pretraining data; teleoperation matches it but needs substantial human effort. <b>DATAFARM</b> aligns TAMP trajectories with the pretraining distribution.</figcaption>
     </figure>
 
   </div>
@@ -94,28 +94,28 @@
 <section id="method">
   <div class="wrap">
     <h2 class="sec">Method</h2>
-    <p class="sec-sub">DATAFARM learns models of reference behavior to guide the planner's selection of configurations, paths, and execution times. These models are learned before planning and subsequently held fixed.</p>
+    <p class="sec-sub">DATAFARM learns models of reference behavior from pretraining data and uses them to guide the planner&rsquo;s configurations, paths, and timing.</p>
 
     <figure class="fig">
       <img src="static/images/overview.jpg" width="1729" height="395" loading="lazy" alt="DATAFARM overview: a Gaussian mixture density over robot configurations and a trajectory encoder with a corresponding latent distribution are learned from pretraining demonstrations; these provide alignment costs for TAMP endpoint selection, path optimization, and retiming; the resulting trajectories are executed on the robot to collect demonstrations used to fine-tune the pretrained VLA." />
-      <figcaption><b>Overview of DATAFARM.</b> DATAFARM first learns a reference distribution from pretraining demonstrations by fitting a Gaussian mixture density over robot configurations and learning a trajectory encoder with a corresponding latent distribution. These references provide alignment costs for TAMP with endpoint selection, path optimization, and retiming. We execute the resulting trajectories on the robot to collect demonstrations, which we use to fine-tune the pretrained VLA &pi;<sub>0.5</sub>-DROID.</figcaption>
+      <figcaption><b>Overview of DATAFARM.</b> A Gaussian mixture over joint configurations and a trajectory encoder, both learned from pretraining demonstrations, provide alignment costs for endpoint selection, path optimization, and retiming.</figcaption>
     </figure>
 
     <div class="pillars">
       <div class="pillar">
         <div class="step">1 &middot; Joint space</div>
         <h4>Endpoint Selection</h4>
-        <p>For each candidate end-effector pose, we rank the IK solutions using the configuration cost. This ranking favors arm postures with higher reference density among the candidates reaching that pose.</p>
+        <p>For each end-effector pose, rank the IK solutions by configuration cost, favoring arm postures with higher reference density.</p>
       </div>
       <div class="pillar">
         <div class="step">2 &middot; Motion style</div>
         <h4>Path Optimization</h4>
-        <p>With endpoints selected, we augment the planner's objective with the trajectory cost. The added cost can therefore change how the arm moves between the endpoints, including the velocities and higher derivatives induced by the waypoint sequence. We optimize this objective using waypoint gradients, back-propagating through the frozen encoder and the kinematic preprocessing. The planner retains its original constraint penalties and checks the resulting motion for feasibility before accepting it.</p>
+        <p>Add the trajectory cost to the planner&rsquo;s objective and optimize the waypoints by gradient through the frozen encoder. This changes how the arm moves between endpoints; feasibility is checked before acceptance.</p>
       </div>
       <div class="pillar">
         <div class="step">3 &middot; Timing</div>
         <h4>Retiming</h4>
-        <p>We next optimize how quickly the robot traverses each path produced by the preceding optimization, keeping the path's geometry fixed. We parameterize the time scaling by dividing the path into 64 equal arc-length intervals, each assigned a fraction of the total duration. A boundary-speed penalty targets the mean speed measured immediately before and after gripper events in the reference demonstrations. Candidate motions are checked against the robot's motion limits before acceptance.</p>
+        <p>Keep each path&rsquo;s geometry fixed and optimize how quickly the robot traverses it, matching reference speeds around gripper events. Motion limits are checked before acceptance.</p>
       </div>
     </div>
 
@@ -132,7 +132,6 @@
         <div class="vid-hd">3 &middot; Retiming</div>
         <video class="wide" data-autoplay muted loop playsinline preload="none" width="1496" height="472" poster="static/videos/anim-retiming.jpg"><source src="static/videos/anim-retiming.mp4" type="video/mp4" /></video>
       </figure>
-      <p class="chart-note">Endpoint selection favors arm postures with higher reference density among the candidates reaching each pose. Path optimization can change how the arm moves between the endpoints, including the velocities and higher derivatives induced by the waypoint sequence. Retiming then changes how quickly the robot traverses each path, keeping the path's geometry fixed.</p>
     </div>
   </div>
 </section>
@@ -141,23 +140,23 @@
 <section id="tasks">
   <div class="wrap">
     <h2 class="sec">Tasks</h2>
-    <p class="sec-sub">For every target task and fine-tuning approach, we train a separate checkpoint from 20 successful demonstrations using the same fine-tuning procedure, and evaluate each checkpoint for 20 trials on fresh initial scenes.</p>
+    <p class="sec-sub">Each checkpoint is fine-tuned on 20 successful demonstrations and evaluated for 20 trials.</p>
 
     <div class="two-col">
       <figure class="fig">
         <img src="static/images/tasks.jpg" width="988" height="668" loading="lazy" alt="Initial and final scenes for Geometric Constraints, Multi-Step Reasoning, Semantic Reasoning, and Deformable Object Manipulation." />
       </figure>
       <ul class="task-list">
-        <li><b>Geometric Constraints <span class="tag target">target</span></b>Requires placing three toys on a plate without collisions. Earlier placements constrain the remaining free space; placing the first toy in the center can prevent a later placement.</li>
-        <li><b>Multi-Step Reasoning <span class="tag target">target</span></b>Requires removing an obstruction from a tray before placing two toys in it.</li>
-        <li><b>Semantic Reasoning <span class="tag target">target</span></b>Requires placing three objects into two bowls according to their semantic categories.</li>
-        <li class="ood"><b>Deformable Object Manipulation <span class="tag ood">out-of-distribution</span></b>Requires folding a cloth and lies outside the capabilities of the planner. The pretrained policy can perform this task, but the planner-generated data excludes it.</li>
+        <li><b>Geometric Constraints <span class="tag target">target</span></b>Place three toys on a plate without collisions; earlier placements limit the free space.</li>
+        <li><b>Multi-Step Reasoning <span class="tag target">target</span></b>Remove an obstruction from a tray, then place two toys in it.</li>
+        <li><b>Semantic Reasoning <span class="tag target">target</span></b>Place three objects into two bowls by semantic category.</li>
+        <li class="ood"><b>Deformable Object Manipulation <span class="tag ood">out-of-distribution</span></b>Fold a cloth. The planner cannot do this, so it is excluded from fine-tuning and tests retention.</li>
       </ul>
     </div>
 
     <!-- ---------- demonstrations ---------- -->
     <h3 class="sub" id="demos">Raw TAMP vs. DATAFARM demonstrations</h3>
-    <p class="sec-sub">DATAFARM aligns planner-generated trajectories with DROID in robot joint configurations, motion style, and execution timing. The TiPToP demonstrations used for fine-tuning are successful planner executions.</p>
+    <p class="sec-sub">Both are successful planner executions; DATAFARM&rsquo;s are aligned with DROID in joint configurations, motion style, and timing.</p>
     <div class="vid-card">
       <div class="vid-row">
         <div class="vid-label"><i style="background: var(--s-raw)"></i>Raw TAMP</div>
@@ -175,7 +174,7 @@
           <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/demo-datafarm-semantic.jpg"><source src="static/videos/demo-datafarm-semantic.mp4" type="video/mp4" /></video><figcaption>Semantic Reasoning</figcaption></figure>
         </div>
       </div>
-      <p class="chart-note">DATAFARM plans and executes the demonstration motions without human control; human assistance is permitted for scene setup and resets. Videos are sped up by the factor shown in each corner.</p>
+      <p class="chart-note">DATAFARM runs without human control; humans only set up and reset scenes.</p>
     </div>
   </div>
 </section>
@@ -184,7 +183,7 @@
 <section id="results">
   <div class="wrap">
     <h2 class="sec">Results</h2>
-    <p class="sec-sub">The TiPToP demonstrations used for fine-tuning are successful planner executions, so their limited downstream benefit cannot be attributed to a failure to solve the tasks. A task-valid trajectory is not necessarily effective fine-tuning data for this pretrained policy.</p>
+    <p class="sec-sub">Raw TAMP demonstrations solve the tasks yet barely help fine-tuning: a task-valid trajectory is not necessarily good fine-tuning data.</p>
 
     <div class="chart-card">
       <div class="chart-head">
@@ -215,20 +214,18 @@
             </tbody>
           </table>
         </div>
-        <p class="caption"><b>Success rate (Succ.) and task progress (Prog.) for task-specific fine-tuning.</b> Each task group reports performance on the named target task and retention on Deformable Object Manipulation; demonstrations of this task are excluded from fine-tuning. Human teleoperation is an oracle only in its access to human target-task demonstrations and is not assumed to upper-bound the autonomous methods.</p>
+        <p class="caption">OOD: retention on Deformable Object Manipulation, which is excluded from fine-tuning. Teleoperation is an oracle only in its access to human demonstrations.</p>
       </details>
     </div>
 
     <div class="findings">
-      <div class="finding"><b>Successful planner trajectories provide little benefit.</b> Averaged across the three target tasks, &pi;<sub>0.5</sub>-DROID succeeds on 1.7% of trials and fine-tuning on raw TAMP data raises success to 8.3%, a gain of 6.6 percentage points.</div>
-      <div class="finding"><b>The improvement occurs on every target task.</b> Fine-tuning on DATAFARM demonstrations raises average success to 56.7% and average task progress to 84.7%, compared with 43.3% progress for raw TAMP and 27.0% for &pi;<sub>0.5</sub>-DROID.</div>
-      <div class="finding"><b>DATAFARM exceeds teleoperation on Geometric Constraints.</b> 65% versus 50% success, and trails it on Multi-Step Reasoning (35% versus 45%) and Semantic Reasoning (70% versus 90%).</div>
-      <div class="finding"><b>DATAFARM requires human assistance only for scene setup and resets.</b> Its autonomously collected demonstrations yield 56.7% average policy success, nearly matching the 61.7% obtained with human demonstrations.</div>
+      <div class="finding"><b>56.7% average success.</b> Up from 8.3% for raw TAMP and 1.7% for &pi;<sub>0.5</sub>-DROID, with gains on every target task.</div>
+      <div class="finding"><b>Close to teleoperation, without teleoperating.</b> 56.7% vs. 61.7% with human demonstrations; humans only set up and reset scenes.</div>
     </div>
 
     <!-- ---------- rollouts ---------- -->
     <h3 class="sub" id="rollouts">Policy rollouts after fine-tuning on DATAFARM</h3>
-    <p class="sec-sub">We evaluate each resulting task-specific policy on its corresponding target task.</p>
+    <p class="sec-sub">Each fine-tuned policy on its target task.</p>
     <div class="vid-card">
       <div class="vid-hd">Target tasks</div>
       <div class="vid-grid cols-3">
@@ -243,12 +240,12 @@
         <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/base-cloth.jpg"><source src="static/videos/base-cloth.mp4" type="video/mp4" /></video><figcaption>Before fine-tuning (&pi;<sub>0.5</sub>-DROID)</figcaption></figure>
         <figure class="vid"><video data-autoplay muted loop playsinline preload="none" width="640" height="360" poster="static/videos/rollout-cloth.jpg"><source src="static/videos/rollout-cloth.mp4" type="video/mp4" /></video><figcaption>After fine-tuning on DATAFARM</figcaption></figure>
       </div>
-      <p class="chart-note">Although none of the fine-tuning datasets include this task, the policies retain 85% average success. Videos are sped up by the factor shown in each corner.</p>
+      <p class="chart-note">No fine-tuning dataset includes this task, yet the policies retain 85% average success.</p>
     </div>
 
     <!-- ---------- ablations ---------- -->
     <h3 class="sub" id="ablations">Contribution of each alignment component</h3>
-    <p class="sec-sub">We remove one alignment component at a time while retaining the other two. Removing joint-space alignment reduces average target-task success from 56.7% to 23.3%, and removing style alignment reduces it to 15.0%. Removing timing alignment has the largest effect: the policy fails every trial across all three target tasks.</p>
+    <p class="sec-sub">Removing one component at a time lowers average success from 56.7% to 23.3% without joint space, 15.0% without style, and 0% without timing.</p>
     <div class="chart-card">
       <div class="chart-head">
         <div class="chart-title">Ablations</div>
@@ -269,7 +266,7 @@
         </div>
         <div class="legend" id="legend-ret"></div>
         <div class="chart" id="chart-ret"></div>
-        <p class="chart-note">Fine-tuning on DATAFARM demonstrations largely preserves the pretrained policy's performance on Deformable Object Manipulation, a task that TiPToP cannot perform. The unmodified &pi;<sub>0.5</sub>-DROID succeeds on 90% of trials. After fine-tuning on Geometric Constraints, Multi-Step Reasoning, or Semantic Reasoning, the policy succeeds on 80%, 85%, and 90% of Deformable Object Manipulation trials, respectively.</p>
+        <p class="chart-note">Cloth folding: 90% before fine-tuning; 80%, 85%, and 90% after fine-tuning on each target task.</p>
       </div>
 
       <!-- ---------- budget ---------- -->
@@ -279,7 +276,7 @@
         </div>
         <div class="legend" id="legend-budget"></div>
         <div class="chart" id="chart-budget"></div>
-        <p class="chart-note">Policy performance on Geometric Constraints with increasing numbers of DATAFARM demonstrations. The 0-demonstration column reports &pi;<sub>0.5</sub>-DROID without fine-tuning. Success reaches 75% with 40 demonstrations and remains at 75% with 60. With 80 demonstrations, the policy reaches 85% success and 97% progress.</p>
+        <p class="chart-note">Geometric Constraints; 0 is &pi;<sub>0.5</sub>-DROID without fine-tuning. Success reaches 75% at 40 demonstrations and 85% at 80.</p>
       </div>
     </div>
   </div>
@@ -289,18 +286,17 @@
 <section id="alignment">
   <div class="wrap">
     <h2 class="sec">Alignment with DROID</h2>
-    <p class="sec-sub">Density contours show samples projected onto the first two principal components of (a) robot joint configurations and (b) trajectory embeddings. The outer line is the displayed density contour for each source.</p>
+    <p class="sec-sub">Samples projected onto the first two principal components of (a) joint configurations and (b) trajectory embeddings.</p>
 
     <div class="two-col">
       <figure class="fig narrow">
         <img src="static/images/alignment.jpg" width="1020" height="1280" loading="lazy" alt="PCA density contours. Joint space: 74% of DATAFARM samples inside the DROID contour vs. 66% raw TAMP and 60% without joint-space alignment. Latent space: 96% DATAFARM vs. 0% raw TAMP, 89% without style, 19% without timing." />
       </figure>
       <div class="prose">
-        <p>DATAFARM increases overlap with DROID in both the joint-space and trajectory-latent projections.</p>
-        <p><b>In joint space</b>, 74% of DATAFARM samples lie inside the displayed DROID contour, compared with 66% for raw TAMP and 60% without joint-space alignment.</p>
-        <p><b>In trajectory latent space</b>, 96% of DATAFARM samples lie inside the DROID contour, compared with 0% for raw TAMP, 89% without style alignment, and 19% without timing alignment.</p>
-        <p>The style ablation retains 89% overlap but reaches only 15.0% success, so high overlap in this projection alone does not ensure task success. Each component improves policy performance when added to the other two.</p>
-        <p class="caption">Each annotation reports the fraction of that source's projected samples inside the outer DROID contour. These projections diagnose overlap in the displayed representations; they do not measure equality with the full pretraining distribution.</p>
+        <p><b>Joint space:</b> 74% of DATAFARM samples lie inside the DROID contour, vs. 66% for raw TAMP and 60% without joint-space alignment.</p>
+        <p><b>Trajectory latent space:</b> 96% for DATAFARM, vs. 0% for raw TAMP, 89% without style, and 19% without timing.</p>
+        <p>Overlap alone does not ensure success: the style ablation reaches 89% overlap but only 15.0% success.</p>
+        <p class="caption">These projections diagnose overlap; they do not measure equality with the full pretraining distribution.</p>
       </div>
     </div>
   </div>
