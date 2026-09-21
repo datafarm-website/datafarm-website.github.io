@@ -72,7 +72,7 @@
     </div>
 
     <figure class="fig teaser">
-      <img src="static/images/teaser.jpg" width="1800" height="782" alt="Given a pretrained VLA and a new task, TAMP is cheap but off-distribution, teleoperation is on-distribution but expensive, and distribution-aligned TAMP (DATAFARM) is cheap and on-distribution. End-effector speed profiles show DATAFARM resembling teleoperation." />
+      <img src="static/images/teaser.jpg" width="1756" height="744" alt="Given a pretrained VLA and a new task, TAMP is cheap but off-distribution, teleoperation is on-distribution but expensive, and distribution-aligned TAMP (DATAFARM) is cheap and on-distribution. End-effector speed profiles show DATAFARM resembling teleoperation." />
       <figcaption>Task and motion planning provides a scalable source of robot demonstrations but generates trajectories that are behaviorally mismatched with the VLA pretraining distribution, resulting in poor fine-tuning performance. Human teleoperation provides on-distribution demonstrations but requires substantial human effort. <b>DATAFARM</b> bridges these two approaches by aligning TAMP-generated trajectories with the pretraining distribution, enabling scalable generation of on-distribution demonstrations for VLA fine-tuning.</figcaption>
     </figure>
 
@@ -97,7 +97,7 @@
     <p class="sec-sub">DATAFARM learns models of reference behavior to guide the planner's selection of configurations, paths, and execution times. These models are learned before planning and subsequently held fixed.</p>
 
     <figure class="fig">
-      <img src="static/images/overview.jpg" width="1800" height="415" loading="lazy" alt="DATAFARM overview: a Gaussian mixture density over robot configurations and a trajectory encoder with a corresponding latent distribution are learned from pretraining demonstrations; these provide alignment costs for TAMP endpoint selection, path optimization, and retiming; the resulting trajectories are executed on the robot to collect demonstrations used to fine-tune the pretrained VLA." />
+      <img src="static/images/overview.jpg" width="1729" height="395" loading="lazy" alt="DATAFARM overview: a Gaussian mixture density over robot configurations and a trajectory encoder with a corresponding latent distribution are learned from pretraining demonstrations; these provide alignment costs for TAMP endpoint selection, path optimization, and retiming; the resulting trajectories are executed on the robot to collect demonstrations used to fine-tune the pretrained VLA." />
       <figcaption><b>Overview of DATAFARM.</b> DATAFARM first learns a reference distribution from pretraining demonstrations by fitting a Gaussian mixture density over robot configurations and learning a trajectory encoder with a corresponding latent distribution. These references provide alignment costs for TAMP with endpoint selection, path optimization, and retiming. We execute the resulting trajectories on the robot to collect demonstrations, which we use to fine-tune the pretrained VLA &pi;<sub>0.5</sub>-DROID.</figcaption>
     </figure>
 
@@ -145,7 +145,7 @@
 
     <div class="two-col">
       <figure class="fig">
-        <img src="static/images/tasks.jpg" width="1040" height="725" loading="lazy" alt="Initial and final scenes for Geometric Constraints, Multi-Step Reasoning, Semantic Reasoning, and Deformable Object Manipulation." />
+        <img src="static/images/tasks.jpg" width="988" height="668" loading="lazy" alt="Initial and final scenes for Geometric Constraints, Multi-Step Reasoning, Semantic Reasoning, and Deformable Object Manipulation." />
       </figure>
       <ul class="task-list">
         <li><b>Geometric Constraints <span class="tag target">target</span></b>Requires placing three toys on a plate without collisions. Earlier placements constrain the remaining free space; placing the first toy in the center can prevent a later placement.</li>
@@ -293,7 +293,7 @@
 
     <div class="two-col">
       <figure class="fig narrow">
-        <img src="static/images/alignment.jpg" width="1045" height="1300" loading="lazy" alt="PCA density contours. Joint space: 74% of DATAFARM samples inside the DROID contour vs. 66% raw TAMP and 60% without joint-space alignment. Latent space: 96% DATAFARM vs. 0% raw TAMP, 89% without style, 19% without timing." />
+        <img src="static/images/alignment.jpg" width="991" height="1263" loading="lazy" alt="PCA density contours. Joint space: 74% of DATAFARM samples inside the DROID contour vs. 66% raw TAMP and 60% without joint-space alignment. Latent space: 96% DATAFARM vs. 0% raw TAMP, 89% without style, 19% without timing." />
       </figure>
       <div class="prose">
         <p>DATAFARM increases overlap with DROID in both the joint-space and trajectory-latent projections.</p>

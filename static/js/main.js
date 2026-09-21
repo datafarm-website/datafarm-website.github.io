@@ -88,7 +88,7 @@
       var W = Math.max(container.clientWidth, 280);
       var narrow = W < 560;
       var H = opts.height || (narrow ? 280 : 320);
-      var m = { t: 22, r: 8, b: narrow ? 44 : 34, l: 34 };
+      var m = { t: 22, r: 1, b: narrow ? 44 : 34, l: 34 };
       var iw = W - m.l - m.r, ih = H - m.t - m.b;
       var cats = opts.cats, keys = opts.keys, data = opts.data();
       var gw = iw / cats.length;
@@ -177,9 +177,10 @@
       if (svg) svg.remove();
       var W = Math.max(container.clientWidth, 260);
       var H = 280;
-      var m = { t: 22, r: 16, b: 40, l: 38 };
+      var m = { t: 22, r: 1, b: 40, l: 38 };
       var iw = W - m.l - m.r, ih = H - m.t - m.b;
-      var x = function (d) { return m.l + (d / 80) * iw; };
+      // keep the last point's marker inside the right edge
+      var x = function (d) { return m.l + (d / 80) * (iw - 5); };
       var y = function (val) { return m.t + ih - (val / 100) * ih; };
       svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', 'aria-label': 'Success and progress vs. number of DATAFARM demonstrations' });
       container.insertBefore(svg, container.firstChild);
