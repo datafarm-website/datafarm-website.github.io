@@ -105,7 +105,7 @@
       <div class="pillar">
         <div class="step">1 &middot; Joint space</div>
         <h4>Endpoint Selection</h4>
-        <p>For each candidate end-effector pose, we rank the IK solutions using the configuration cost. This ranking favors arm postures with higher reference density among the candidates reaching that pose. The configuration density is a 16-component full-covariance Gaussian mixture over the 7 joint angles, fitted to 987,631 frames from 4,000 reference episodes.</p>
+        <p>For each candidate end-effector pose, we rank the IK solutions using the configuration cost. This ranking favors arm postures with higher reference density among the candidates reaching that pose.</p>
       </div>
       <div class="pillar">
         <div class="step">2 &middot; Motion style</div>
@@ -121,14 +121,18 @@
 
     <div class="vid-card">
       <figure class="vid">
+        <div class="vid-hd">1 &middot; Endpoint selection</div>
+        <img class="wide" src="static/images/endpoint-selection.jpg" width="2992" height="944" loading="lazy" alt="A density over robot joint configurations with several peaks; an arrow runs from the highest peak to the configuration selected on the trajectory." />
+      </figure>
+      <figure class="vid">
         <div class="vid-hd">2 &middot; Path optimization</div>
         <video class="wide" data-autoplay muted loop playsinline preload="none" width="1496" height="472" poster="static/videos/anim-path-optimization.jpg"><source src="static/videos/anim-path-optimization.mp4" type="video/mp4" /></video>
       </figure>
-      <figure class="vid" style="margin-top: 20px;">
+      <figure class="vid">
         <div class="vid-hd">3 &middot; Retiming</div>
         <video class="wide" data-autoplay muted loop playsinline preload="none" width="1496" height="472" poster="static/videos/anim-retiming.jpg"><source src="static/videos/anim-retiming.mp4" type="video/mp4" /></video>
       </figure>
-      <p class="chart-note">Path optimization can change how the arm moves between the endpoints, including the velocities and higher derivatives induced by the waypoint sequence. Retiming then changes how quickly the robot traverses each path, keeping the path's geometry fixed.</p>
+      <p class="chart-note">Endpoint selection favors arm postures with higher reference density among the candidates reaching each pose. Path optimization can change how the arm moves between the endpoints, including the velocities and higher derivatives induced by the waypoint sequence. Retiming then changes how quickly the robot traverses each path, keeping the path's geometry fixed.</p>
     </div>
   </div>
 </section>
@@ -137,7 +141,7 @@
 <section id="tasks">
   <div class="wrap">
     <h2 class="sec">Tasks</h2>
-    <p class="sec-sub">We use the DROID robot platform: a Franka Emika Panda 7-DOF arm with a Robotiq 2F-85 gripper, two external ZED 2 stereo cameras, and a wrist-mounted ZED Mini stereo camera. For every target task and fine-tuning approach, we train a separate checkpoint from 20 successful demonstrations using the same fine-tuning procedure, and evaluate each checkpoint for 20 trials on fresh initial scenes.</p>
+    <p class="sec-sub">For every target task and fine-tuning approach, we train a separate checkpoint from 20 successful demonstrations using the same fine-tuning procedure, and evaluate each checkpoint for 20 trials on fresh initial scenes.</p>
 
     <div class="two-col">
       <figure class="fig">
