@@ -109,7 +109,7 @@
     order[i].result = right ? 'right' : 'wrong';
     clips.forEach(function (c, s) {
       c.classList.add(s === tampSide ? 'is-tamp' : 'is-teleop');
-      reveals[s].textContent = s === tampSide ? 'DATAFARM (planner)' : 'Human teleoperation';
+      reveals[s].textContent = s === tampSide ? 'DATAFARM' : 'Human teleoperation';
     });
     clips[side].classList.add('picked', right ? 'right' : 'wrong');
     picks.forEach(function (b) { b.disabled = true; });
@@ -127,10 +127,10 @@
 
   function finish() {
     var n = order.length;
-    resultEl.innerHTML = '<b>You spotted DATAFARM in ' + score + ' of ' + n + ' rounds.</b> ' +
-      (score <= Math.ceil(n * 0.6)
-        ? 'Guessing gets ' + (n / 2) + ' on average: the planner&rsquo;s motion is hard to tell apart from a person&rsquo;s.'
-        : 'Sharp eye. The tells that remain: the planner lifts objects a little higher and moves with a steady ripple of small speed pulses rather than a person&rsquo;s few large bursts.');
+    resultEl.innerHTML = '<b>You spotted DATAFARM in ' + score + ' of ' + n + ' rounds.</b>' +
+      (score > Math.ceil(n * 0.6)
+        ? ' Sharp eye. The tells that remain: DATAFARM lifts objects a little higher and moves with a steady ripple of small speed pulses rather than a person&rsquo;s few large bursts.'
+        : '');
     nextBtn.textContent = 'Play again';
     roundEl.textContent = 'Game over';
     done = true;
