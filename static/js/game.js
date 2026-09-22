@@ -127,10 +127,7 @@
 
   function finish() {
     var n = order.length;
-    resultEl.innerHTML = '<b>You spotted DATAFARM in ' + score + ' of ' + n + ' rounds.</b>' +
-      (score > Math.ceil(n * 0.6)
-        ? ' Sharp eye. The tells that remain: DATAFARM lifts objects a little higher and moves with a steady ripple of small speed pulses rather than a person&rsquo;s few large bursts.'
-        : '');
+    resultEl.innerHTML = '<b>You spotted DATAFARM in ' + score + ' of ' + n + ' rounds.</b>';
     nextBtn.textContent = 'Play again';
     roundEl.textContent = 'Game over';
     done = true;
