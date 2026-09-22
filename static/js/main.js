@@ -303,6 +303,24 @@
     vids.forEach(function (vd) { vio.observe(vd); });
   }
 
+  // ---------- autonomous run: swap the 50x preview for the real-time video ----------
+  var swap = document.getElementById('auto-swap');
+  if (swap) {
+    var fast = document.getElementById('auto-50x'), full = document.getElementById('auto-1x');
+    swap.addEventListener('click', function () {
+      var toFull = full.hidden;
+      var show = toFull ? full : fast, hide = toFull ? fast : full;
+      hide.pause();
+      hide.hidden = true;
+      show.hidden = false;
+      if (toFull || !reduceMotion) {
+        var p = show.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+      swap.textContent = toFull ? 'Back to 50× preview' : 'Watch at 1× speed (14 min)';
+    });
+  }
+
   // ---------- TOC scroll-spy ----------
   var links = Array.prototype.slice.call(document.querySelectorAll('.toc-list a'));
   var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });

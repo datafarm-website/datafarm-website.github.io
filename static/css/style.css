@@ -148,6 +148,11 @@ figure { margin: 0; }
 @media (max-width: 560px) { .vid-grid.cols-2, .vid-grid.cols-3 { grid-template-columns: 1fr; } }
 .vid video { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; background: var(--bg-soft); }
 .vid video.wide { aspect-ratio: 1496 / 472; background: var(--bg); border: 1px solid var(--line); }
+.vid video[hidden] { display: none; }
+.vid-card.narrow { max-width: 680px; }
+.vid-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; margin-top: 12px; }
+.vid-foot .chart-note { margin: 0; }
+button.btn { font-family: inherit; line-height: inherit; cursor: pointer; }
 .vid img.wide { width: 100%; height: auto; border: 1px solid var(--line); }
 .vid-card > .vid + .vid { margin-top: 20px; }
 .vid figcaption { font-size: 13px; color: var(--muted); margin-top: 7px; line-height: 1.35; }

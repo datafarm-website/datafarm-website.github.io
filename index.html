@@ -26,6 +26,7 @@
     <a class="link" href="#method">Method</a>
     <a class="link" href="#results">Results</a>
     <a class="link" href="#alignment">Alignment</a>
+    <a class="link" href="#autonomous">Data Collection</a>
     <a class="link" href="#bibtex">BibTeX</a>
   </div>
 </nav>
@@ -44,6 +45,7 @@
     <li><a href="#retention">Capability Retention</a></li>
     <li><a href="#budget">Demonstration Budget</a></li>
     <li><a href="#alignment">Alignment with DROID</a></li>
+    <li><a href="#autonomous">Autonomous Data Collection</a></li>
     <li><a href="#bibtex">BibTeX</a></li>
   </ul>
 </nav>
@@ -296,7 +298,25 @@
         <p><b>Joint space:</b> 74% of DATAFARM samples lie inside the DROID contour, vs. 66% for raw TAMP and 60% without joint-space alignment.</p>
         <p><b>Trajectory latent space:</b> 96% for DATAFARM, vs. 0% for raw TAMP, 89% without style, and 19% without timing.</p>
         <p>Overlap alone does not ensure success: the style ablation reaches 89% overlap but only 15.0% success.</p>
-        <p class="caption">These projections diagnose overlap; they do not measure equality with the full pretraining distribution.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AUTONOMOUS DATA COLLECTION ===================== -->
+<section id="autonomous">
+  <div class="wrap">
+    <h2 class="sec">Autonomous Data Collection</h2>
+    <p class="sec-sub">Using TAMP, the robot can alternate between collecting a demonstration and resetting the scene.</p>
+
+    <div class="vid-card narrow">
+      <figure class="vid">
+        <video id="auto-50x" data-autoplay muted loop playsinline preload="none" width="960" height="540" poster="static/videos/autonomous-geometric-50x.jpg"><source src="static/videos/autonomous-geometric-50x.mp4" type="video/mp4" /></video>
+        <video id="auto-1x" hidden controls playsinline preload="none" width="960" height="540" poster="static/videos/autonomous-geometric-1x.jpg"><source src="static/videos/autonomous-geometric-1x.mp4" type="video/mp4" /></video>
+      </figure>
+      <div class="vid-foot">
+        <p class="chart-note">Nine rollouts and eight resets in 14 minutes.</p>
+        <button class="btn" type="button" id="auto-swap">Watch at 1&times; speed (14 min)</button>
       </div>
     </div>
   </div>
