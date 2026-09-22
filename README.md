@@ -11,6 +11,17 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
+## Teleop-vs-DATAFARM game
+
+The game under the hero buttons plays web encodes of the clips in `datafarm_game/` (not committed; ~1 GB).
+After changing the pairs, regenerate `static/videos/game/` and `static/js/game-rounds.js`:
+
+```bash
+python3 datafarm_game/build_web_clips.py
+```
+
+Preview with a server that supports HTTP range requests (e.g. `npx http-server`), or seeking in the game won't work locally.
+
 ## Deploy on GitHub Pages
 
 Settings → Pages → Source: *Deploy from a branch* → `main` / `(root)`.

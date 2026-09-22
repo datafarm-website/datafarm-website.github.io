@@ -95,6 +95,54 @@ h1.title {
 .btn.soon:hover { border-color: var(--line); }
 .btn svg { width: 15px; height: 15px; opacity: .75; }
 
+/* ---------- game: spot the planner ---------- */
+.game { margin: 40px 0 0; padding: 26px 28px 24px; border: 1px solid var(--line-2); background: var(--bg-soft); text-align: left; }
+.game[hidden] { display: none; }
+.game-hd { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 20px; }
+.game-kicker { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.game-title { font-family: var(--font-serif); font-size: 23px; font-weight: 600; margin: 4px 0 0; letter-spacing: -.005em; line-height: 1.25; }
+.game-score { font-size: 13.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.game-sub { color: var(--ink-2); font-size: 15px; margin: 10px 0 20px; }
+.game-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-bottom: 12px; }
+.game-task { font-size: 14px; color: var(--ink); font-weight: 600; }
+.game-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.game-ctrl .seg { background: var(--bg); }
+.game .btn { font-size: 13px; padding: 4px 12px; }
+.game-clips { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.game-clip { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.game-frame { position: relative; border: 2px solid transparent; }
+.game-frame video { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #d9d9d5; }
+.game-letter {
+  position: absolute; top: 8px; left: 8px; z-index: 2;
+  background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; padding: 1px 8px;
+}
+.game-reveal {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  padding: 6px 10px; font-size: 13px; font-weight: 600; color: #fff; display: none;
+}
+.game-clip.is-tamp .game-reveal { display: block; background: var(--s-ours); }
+.game-clip.is-teleop .game-reveal { display: block; background: var(--s-human); }
+.game-clip.picked.right .game-frame { border-color: var(--s-human); }
+.game-clip.picked.wrong .game-frame { border-color: var(--s-raw); }
+.game .btn.game-pick { justify-content: center; font-size: 14px; padding: 8px 15px; }
+.game .btn.game-pick:disabled { cursor: default; color: var(--muted); border-color: var(--line); }
+.game-clip.picked .btn.game-pick:disabled { color: var(--ink); border-color: var(--ink); }
+.game-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 16px; min-height: 34px; }
+.game-dots { display: flex; gap: 4px; }
+.game-dots i { width: 10px; height: 10px; border: 1px solid var(--line-2); background: var(--bg); }
+.game-dots i.cur { border-color: var(--ink); }
+.game-dots i.right { background: var(--s-human); border-color: var(--s-human); }
+.game-dots i.wrong { background: var(--s-raw); border-color: var(--s-raw); }
+.game-result { font-size: 14px; color: var(--ink-2); flex: 1 1 240px; }
+.game-result b { color: var(--ink); }
+.game .btn.game-next { background: var(--ink); color: #fff; border-color: var(--ink); font-size: 14px; padding: 7px 15px; margin-left: auto; }
+.game .btn.game-next:hover { background: var(--ink-2); }
+@media (max-width: 600px) {
+  .game { padding: 20px 16px; margin-left: -4px; margin-right: -4px; }
+  .game-clips { grid-template-columns: 1fr; }
+  .game-title { font-size: 20px; }
+}
+
 /* ---------- sections ---------- */
 section { padding: 66px 0; border-top: 1px solid var(--line); }
 h2.sec { font-family: var(--font-serif); font-size: 27px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.005em; }
